@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 var fs = require('fs')
 var readline = require('readline');
-var Iterator = require('js-array-iterator');
 var exec = require('child_process').exec;
 var path;
 
