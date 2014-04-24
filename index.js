@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var fs = require('fs')
 var readline = require('readline');
 var Iterator = require('js-array-iterator');
@@ -17,23 +18,31 @@ function pathChecking() {
   }
 }
 
-function buildMessage(iterator,prefix) {
-  iterator.on('next', function(element) {
-    console.log(">"+element);
-    rl.on("line",  function(answer) {
-      rl.setPrompt(">",1);
-      rl.prompt();
-      if(answer.length > 0) {
-        message += prefix+element+"\n"+answer+"\n";
-      }
-      iterator.next();
-    });
-  });
-  iterator.next();
+function Q (questions) {
+  this._i = 0;
+  this.questions = questions;
+}
+Q.prototype.nextQuestion = function () {
+  this._i++;
+  if (this._i >= this.questions.length)
+    return false
+  else {
+    console.log(this.questions[this._i]);
+    return true
+  }
+}
+Q.prototype.getCurrent = function() {
+  return this.questions[this._i];
 }
 
-function ammendMessage(argument) {
-  exec("echo '"+message+"' | git commit --amend --file -",function(err,stdout,sterr) {
+function addPrefixToEach(toPrefix, prefix) {
+  elements = toPrefix.split(",");
+  elements.join(prefix);
+}
+
+function ammendMessage(message) {
+  console.log(message);
+  exec("echo \""+message+"\" | git commit --amend --file -",function(err,stdout,sterr) {
     console.log(err,stdout,sterr);
   });
 }
@@ -44,19 +53,24 @@ if(!path) {
   return process.exit(1);
 }
 var template = require(path);
-var headlines = new Iterator(template["headlines"]);
+var headlines = new Q(template["headlines"]);
 var commits = new Iterator(template["commits"]);
 var notifiers = new Iterator(template["notifiers"]);
 var message = "";
-var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
+var readline = require('readline'),
+  rl = readline.createInterface(process.stdin, process.stdout),
+  prefix = 'GH-T: > ';
+
+rl.on('line', function(line) {
+  if(line.length > 0)
+    message += "##"+headlines.getCurrent()+"\n"+line+"\n";
+  if (!headlines.nextQuestion()){ return rl.close() }
+  rl.setPrompt(prefix, prefix.length);
+  rl.prompt();
+}).on('close', function() {
+  ammendMessage(message);
 });
-buildMessage(headlines, "##");
-headlines.on("end", function() {
-  buildMessage(commits, "#");
-  rl.close();
-  ammendMessage();
-});
-rl.setPrompt(">",1);
+
+console.log(prefix + headlines.getCurrent());
+rl.setPrompt(prefix, prefix.length);
 rl.prompt();
