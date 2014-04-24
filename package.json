@@ -1,6 +1,6 @@
 {
   "name": "pull-request-commit-hook",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Pull Request Template for GitHub Pull Requests",
   "bin": "index.js",
   "main": "index.js",
