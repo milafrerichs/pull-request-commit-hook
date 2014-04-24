@@ -1,4 +1,3 @@
 {
-  "version": "",
-  "headlines": ["Test"]
+  "headlines": ["What does this PR do?","Where should the reviewer start?","How should this be tested?"]
 }
