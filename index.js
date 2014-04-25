@@ -38,7 +38,7 @@ prefix = 'GH-T: > ';
 
 rl.on('line', function(line) {
   if(line.length > 0)
-    message += "PR with Template\n"+headlines.getCurrent()+"\n---------\n"+line+"\n";
+    message += headlines.getCurrent()+"\n---------\n"+line+"\n";
   if (!headlines.nextQuestion()){ return rl.close() }
   rl.setPrompt(prefix, prefix.length);
   rl.prompt();
