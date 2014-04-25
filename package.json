@@ -1,11 +1,11 @@
 {
   "name": "pull-request-commit-hook",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Pull Request Template for GitHub Pull Requests",
   "bin": "index.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tap ./test"
   },
   "keywords": [
     "git",
@@ -17,6 +17,8 @@
   "author": "Mila Frerichs, Johannes Boyne",
   "license": "MIT",
   "dependencies": {
-    "js-array-iterator": "~0.1.0"
+  },
+  "devDependencies": {
+    "tap": "~0.4.8"
   }
 }
